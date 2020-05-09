@@ -59,7 +59,7 @@ Sử dụng lệnh `tail -n 100 /var/log/httpd/access_log`
 
 Ta thấy rằng gần đây có rất nhiều kết nối từ địa chỉ `10.10.34.196` thiết lập kết nối vào trang web. 
 
-Nhìn kỹ 1 chút thì ta sẽ thấy rằng tuy rằng sẽ có thể có những địa chỉ khác nhưng điểm chung là chúng đều sử dụng chung 1 kiểu `User-Agent` (các user-agent hiển thị theo hình thức lặp đi lặp lại trong 1 list khoảng 10 user-agent khác nhau). Các `header-referers` cũng hiển thị tương tự như vậy. 
+Nhìn kỹ 1 chút thì ta sẽ thấy rằng tuy rằng sẽ có thể có những địa chỉ khác nhưng điểm chung là chúng đều sử dụng chung 1 kiểu `User-Agent` (các user-agent hiển thị theo hình thức lặp đi lặp lại trong 1 list khoảng 10 user-agent khác nhau). Các `header-referers` cũng hiển thị theo hình thức tương tự như vậy. 
 Và 1 đặc điểm nữa ta thấy rằng các IP trên khi truy cập không hề load CSS.
 
 Để chắc chắn 1 lần nữa rằng đây là IP đã gây ra sự cố, ta xem những địa chỉ đã truy cập gần đây và hiển thị địa chỉ IP có lượt truy cập nhiều nhất. 
