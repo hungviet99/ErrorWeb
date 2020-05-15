@@ -6,9 +6,9 @@ Một web site wordpress đang chạy bình thường bỗng nhiên bị lỗi "
 
 Trong trường hợp này trước tiên, kiểm tra trạng thái của mysql hoặc mariadb : 
 
-![Imgur](https://i.imgur.com/aEYP7qM.jpg)
+![Imgur](https://i.imgur.com/jApAKkp.png)
 
-ta thấy rằng cơ sở dữ liệu mariadb đã bị tắt hoàn toàn. Trong trường hợp này bạn có thể khởi động lại cơ sở dữ liệu sẽ chạy lại bình thường. 
+ta thấy rằng cơ sở dữ liệu mysql đã bị tắt. Trong trường hợp này bạn có thể khởi động lại cơ sở dữ liệu sẽ chạy lại bình thường. 
 
 Nhưng còn nguyên nhân gây ra lỗi ? 
 
@@ -16,7 +16,6 @@ Hôm nay mình sẽ mô tả lại cách gây ra lỗi và truy tìm nguyên nh�
 
 >Lưu ý: Không nên thử đối với các trang web thuộc các tổ chức, cá nhân khác mà không được sự cho phép của họ. Chỉ nên thử đối với trang web của bạn hoặc do bạn quản lý. 
 
-Tại đây mình sẽ sử dụng 2 trang wordpress, 1 trang chạy dịch vụ mariadb, 1 trang chạy dịch vụ mysql. Để xem 2 trang web có gì khác biệt sau khi bị lỗi kết nối cơ sở dữ liệu hay không. 
 
 ## 1. Môi trường : 
 
@@ -39,9 +38,9 @@ Cho đến khi trang web xuất hiện như sau :
 
 sau đó, kiểm tra trạng thái cơ sở dữ liệu : 
 
-![Imgur](https://i.imgur.com/aEYP7qM.jpg)
+![Imgur](https://i.imgur.com/jApAKkp.png)
 
-Ta thấy răng cơ sở dữ liệu mariadb đã bị tắt, và lỗi dịch vụ mariadb. 
+Ta thấy răng cơ sở dữ liệu mysql đã bị tắt. 
 
 Tiếp theo ta kiểm tra nguyên nhân dẫn đến cơ sở dữ liệu bị dừng : 
 
@@ -51,11 +50,21 @@ Sử dụng lệnh `dmesg`
 
 Ta thấy rằng có 1 cảnh báo là có quá nhiều cờ SYN được gửi đến trên cổng 80. Đây có thể là 1 cuộc tấn công DoS. Dẫn đến hết ram và tiến trình của mariadb đã bị kill. 
 
+Tiến hành vào file `/var/log/messages` để xác định được thời gian tiến trình mysql bị kill. 
+
+```
+tailf -n 500 /var/log/messages
+```
+
+![Imgur](https://i.imgur.com/rMiDet6.png)
+
+Ta thấy rằng thời gian mà mysql bị kill là `9h58`, 
+
 Từ đây ta sẽ vào file access log của dịch vụ http để check các kết nối gần đây. 
 
-Sử dụng lệnh `tail -n 100 /var/log/httpd/access_log`
+Sử dụng lệnh `cat /var/log/httpd/access_log | grep -B 500 "9:58"` để xem các truy cập vào cơ sở dữ liệu trong khoảng thời gian `9h58`. 
 
-![Imgur](https://i.imgur.com/llx1Zqq.png)
+![Imgur](https://i.imgur.com/Kl8UnID.png)
 
 Ta thấy rằng gần đây có rất nhiều kết nối từ địa chỉ `10.10.34.196` thiết lập kết nối vào trang web. 
 
