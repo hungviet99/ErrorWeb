@@ -58,7 +58,7 @@ tailf -n 500 /var/log/messages
 
 ![Imgur](https://i.imgur.com/rMiDet6.png)
 
-Ta thấy rằng thời gian mà mysql bị kill là `9h58`, 
+Ta thấy rằng thời gian mà mysql bị kill là `9h58` và trong khoảng thời gian đó cũng có rất nhiều các tiến trình http được thiết lập 
 
 Từ đây ta sẽ vào file access log của dịch vụ http để check các kết nối gần đây. 
 
